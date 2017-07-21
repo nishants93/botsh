@@ -1,0 +1,22 @@
+#!/bin/bash
+
+function exit {
+KEEP_GOING=false
+}
+
+
+KEEP_GOING=true
+
+while $KEEP_GOING
+do
+echo "Hi, I am termy. I am at your assistance, what do you want me to do?"
+read UTTERANCE
+FULL_UTTERANCE="$UTTERANCE"
+APIAI_RESPONSE=$(curl -H "Content-Type: application/json; charset=utf-8" -H "Authorization: Bearer ba64b84b09bf4d259c990348f1c7906f" --data "{'query':'$FULL_UTTERANCE', 'timezone':'GMT-5', 'lang':'en', 'sessionId':'1234567890'}" "https://api.api.ai/v1/query?v=20150910" 2>/dev/null )
+
+
+ACTION=`echo $APIAI_RESPONSE | jq '.result.action'`
+SPEECH=`echo $APIAI_RESPONSE | jq '.result.fulfillment.speech'`
+echo $SPEECH
+eval ${ACTION}
+done
